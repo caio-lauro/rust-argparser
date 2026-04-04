@@ -71,17 +71,17 @@ impl ArgumentParser {
         let mut seen_all_required = false;
         let mut parse_options = true;
         while let Some(arg) = it.next() {
+            if parse_options && arg == "--" {
+                parse_options = false;
+                continue;
+            }
+
             let argument = if let Some(nxt) = current_required.next() {
                 Some(nxt)
             } else {
                 seen_all_required = true;
                 None
             };
-
-            if parse_options && arg == "--" {
-                parse_options = false;
-                continue;
-            }
 
             if parse_options && arg.starts_with("--") {
                 let name = arg[2..].to_string();
