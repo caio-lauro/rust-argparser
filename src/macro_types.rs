@@ -1,10 +1,12 @@
 macro_rules! define_arg_types {
     ($($variant:ident => $type:ty),* $(,)?) => {
+        /// Enum used to store the type of the argument.
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
         pub enum ArgumentType {
             $($variant),*
         }
 
+        /// Enum used to store both the type and the value of the argument.
         #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
         pub enum ParsedValue {
             $($variant($type)),*
