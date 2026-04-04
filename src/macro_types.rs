@@ -18,6 +18,23 @@ macro_rules! define_arg_types {
                 )
             }
         }
+
+        pub trait FromParsedValue: Sized {
+            fn from_parsed(val: &ParsedValue, name: &str) -> Self;
+        }
+
+        $(
+            impl FromParsedValue for $type {
+                fn from_parsed(val: &ParsedValue, name: &str) -> Self {
+                    match val {
+                        ParsedValue::$variant(v) => v.clone(),
+                        _ => panic!(
+                            "Argument '{name}' is not of the expected type"
+                        )
+                    }
+                }
+            }
+        )*
     };
 }
 
