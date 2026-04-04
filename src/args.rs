@@ -212,7 +212,24 @@ mod tests {
 
     #[test]
     #[should_panic]
+    fn argument_from_name_with_single_dash_panics() {
+        Argument::from("-a", Text);
+    }
+
+    #[test]
+    fn optional_argument_valid() {
+        OptionalArgument::from("argument", "a", Text, ParsedValue::Text(String::new()));
+    }
+
+    #[test]
+    #[should_panic]
     fn optional_argument_mismatched_default_panics() {
         OptionalArgument::from("argument", "a", Boolean, ParsedValue::Integer(0));
+    }
+
+    #[test]
+    fn optional_argument_get_short() {
+        let opt_arg = OptionalArgument::from("verbose", "v", Boolean, ParsedValue::Boolean(false));
+        assert_eq!(opt_arg.get_short_form(), Some("v".to_string()));
     }
 }
