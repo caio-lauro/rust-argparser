@@ -109,13 +109,13 @@ pub struct ParsedArgs {
 }
 
 impl ParsedArgs {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             values: HashMap::new(),
         }
     }
 
-    pub fn insert(&mut self, name: String, value: ParsedValue) {
+    pub(crate) fn insert(&mut self, name: String, value: ParsedValue) {
         self.values.insert(name, value);
     }
 }
