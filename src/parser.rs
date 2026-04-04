@@ -8,7 +8,7 @@ struct OptionalEntry {
     seen: bool,
 }
 
-/// Argument parser, to be used with std::env::args or other types that implement 
+/// Argument parser, to be used with std::env::args or other types that implement
 /// `IntoIterator` and have `String` as items.
 pub struct ArgumentParser {
     required_args: Vec<Box<dyn ArgumentTrait>>,
