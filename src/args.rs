@@ -105,7 +105,7 @@ impl<'a> OptionalArgument<'a> {
 }
 
 pub struct ParsedArgs {
-    values: HashMap<String, Option<ParsedValue>>,
+    values: HashMap<String, ParsedValue>,
 }
 
 impl ParsedArgs {
@@ -116,7 +116,7 @@ impl ParsedArgs {
     }
 
     pub fn insert(&mut self, name: String, value: ParsedValue) {
-        self.values.insert(name, Some(value));
+        self.values.insert(name, value);
     }
 }
 
