@@ -203,3 +203,188 @@ impl ArgumentParser {
         Ok(parsed)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::args::{Argument, OptionalArgument};
+    use crate::macro_types::*;
+
+    fn make_args(args: &[&str]) -> impl IntoIterator<Item = String> {
+        std::iter::once("program".to_string()).chain(args.iter().map(|s| s.to_string()))
+    }
+
+    #[test]
+    fn parse_required_text() {
+        let parsed = ArgumentParser::new()
+            .add_arg(Argument::from("filename", Text))
+            .parse(make_args(&["filename.txt"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<String>("filename"), "filename.txt");
+    }
+
+    #[test]
+    fn parse_required_integer() {
+        let parsed = ArgumentParser::new()
+            .add_arg(Argument::from("port", Integer))
+            .parse(make_args(&["8080"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<i64>("port"), 8080);
+    }
+
+    #[test]
+    fn parse_optional_long_form() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from(
+                "port",
+                Some("p"),
+                Integer,
+                ParsedValue::Integer(8080),
+            ))
+            .parse(make_args(&["--port", "42"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<i64>("port"), 42);
+    }
+
+    #[test]
+    fn parse_optional_short_form() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from(
+                "port",
+                Some("p"),
+                Integer,
+                ParsedValue::Integer(8080),
+            ))
+            .parse(make_args(&["-p", "42"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<i64>("port"), 42);
+    }
+
+    #[test]
+    fn parse_optional_bool_long_form() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from(
+                "verbose",
+                Some("v"),
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
+            .parse(make_args(&["--verbose"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<bool>("verbose"), true);
+    }
+
+    #[test]
+    fn parse_optional_bool_short_form() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from(
+                "verbose",
+                Some("v"),
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
+            .parse(make_args(&["-v"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<bool>("verbose"), true);
+    }
+
+    #[test]
+    fn parse_optional_uses_default_value() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from(
+                "verbose",
+                Some("v"),
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
+            .parse(make_args(&[]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<bool>("verbose"), false);
+    }
+
+    #[test]
+    fn parse_optional_without_short_form() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from("version", None, Boolean, ParsedValue::Boolean(false)))
+            .parse(make_args(&["--version"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<bool>("version"), true);
+    }
+
+    #[test]
+    fn parse_optional_without_short_form_uses_default_value() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from("version", None, Boolean, ParsedValue::Boolean(false)))
+            .parse(make_args(&[]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<bool>("version"), false);
+    }
+
+    #[test]
+    fn parse_double_dash_stops_option_parsing() {
+        let parsed = ArgumentParser::new()
+            .add_arg(Argument::from("filename", Text))
+            .parse(make_args(&["--", "--filename.txt"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<String>("filename"), "--filename.txt");
+    }
+
+    #[test]
+    fn parse_multiple_required_arguments() {
+        let parsed = ArgumentParser::new()
+            .add_arg(Argument::from("input", Text))
+            .add_arg(Argument::from("output", Text))
+            .add_arg(Argument::from("count", Integer))
+            .parse(make_args(&["input.txt", "output.txt", "42"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<String>("input"), "input.txt");
+        assert_eq!(parsed.get_value::<String>("output"), "output.txt");
+        assert_eq!(parsed.get_value::<i64>("count"), 42);
+    }
+
+    #[test]
+    fn parse_multiple_optional_arguments() {
+        let parsed = ArgumentParser::new()
+            .add_arg(OptionalArgument::from(
+                "verbose",
+                Some("v"),
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
+            .add_arg(OptionalArgument::from(
+                "port",
+                Some("p"),
+                Integer,
+                ParsedValue::Integer(8080),
+            ))
+            .add_arg(OptionalArgument::from(
+                "version",
+                None,
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
+            .parse(make_args(&["-p", "42", "-v"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<bool>("verbose"), true);
+        assert_eq!(parsed.get_value::<i64>("port"), 42);
+        assert_eq!(parsed.get_value::<bool>("version"), false);
+    }
+
+    #[test]
+    fn parse_multiple_optional_and_required_arguments() {
+        let parsed = ArgumentParser::new()
+            .add_arg(Argument::from("input", Text))
+            .add_arg(OptionalArgument::from(
+                "verbose",
+                Some("v"),
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
+            .add_arg(Argument::from("output", Text))
+            .parse(make_args(&["input.txt", "-v", "output.txt"]))
+            .unwrap();
+        assert_eq!(parsed.get_value::<String>("input"), "input.txt");
+        assert_eq!(parsed.get_value::<bool>("verbose"), true);
+        assert_eq!(parsed.get_value::<String>("output"), "output.txt");
+    }
+}
