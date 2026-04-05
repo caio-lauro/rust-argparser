@@ -127,7 +127,7 @@ impl ParsedArgs {
         self.values.insert(name, value);
     }
 
-    /// Gets the value of a given argument as a reference to ParsedValue. \
+    /// Gets the value of a given argument by `name` as a reference to ParsedValue. \
     /// Panics in case the argument doesn't exist.
     pub fn get(&self, name: &str) -> &ParsedValue {
         self.values
@@ -135,7 +135,7 @@ impl ParsedArgs {
             .unwrap_or_else(|| panic!("Argument {name} not found"))
     }
 
-    /// Gets the value of a given argument directly, in case you don't want
+    /// Gets the value of a given argument by `name` directly, in case you don't want
     /// to use pattern matching. \
     /// Using the internal method `get`, panics in case the argument doesn't
     /// exist.
