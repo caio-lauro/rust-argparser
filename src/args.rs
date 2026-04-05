@@ -52,7 +52,9 @@ impl<'a> Argument<'a> {
 /// Type of argument to be used in case you want an optional argument. \
 /// The *name* of the argument will be considered as the long form of the argument.
 ///
-/// Don't use hyphens when specifying the long and short forms of the argument.
+/// Don't use hyphens when specifying the long and short forms of the argument. \
+/// Always use a long form, as it is considered the *name* of the argument. \
+/// The short form is optional.
 pub struct OptionalArgument<'a> {
     long: &'a str,
     short: Option<&'a str>,
@@ -87,7 +89,9 @@ impl<'a> OptionalArgument<'a> {
     /// an `ArgumentType` and a `default` value. \
     /// Use the same type for both `argtype` and `default`.
     ///
-    /// Don't use hyphens when specifying the long and short forms of the argument.
+    /// Don't use hyphens when specifying the long and short forms of the argument. \
+    /// Always use a long form, as it is considered the *name* of the argument. \
+    /// The short form is optional.
     pub fn from(
         long: &'a str,
         short: Option<&'a str>,
