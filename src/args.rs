@@ -98,14 +98,26 @@ impl<'a> OptionalArgument<'a> {
         argtype: ArgumentType,
         default: ParsedValue,
     ) -> OptionalArgument<'a> {
-        assert!(default.matches(&argtype), "argtype and default must be of the same type, got {argtype:?} and {default:?}");
+        assert!(
+            default.matches(&argtype),
+            "argtype and default must be of the same type, got {argtype:?} and {default:?}"
+        );
 
         assert!(!long.is_empty(), "long type of argument must be used");
-        assert!(!long.starts_with("-"), "long form must not start with '-', got: {long:?}");
+        assert!(
+            !long.starts_with("-"),
+            "long form must not start with '-', got: {long:?}"
+        );
 
         if let Some(s) = short {
-            assert!(!s.is_empty(), "If entered, short type of argument must not be empty");
-            assert!(!s.starts_with("-"), "short form must not start with '-', got: {long:?}");
+            assert!(
+                !s.is_empty(),
+                "If entered, short type of argument must not be empty"
+            );
+            assert!(
+                !s.starts_with("-"),
+                "short form must not start with '-', got: {long:?}"
+            );
         }
 
         OptionalArgument {
@@ -226,7 +238,12 @@ mod tests {
 
     #[test]
     fn optional_argument_valid() {
-        OptionalArgument::from("argument", Some("a"), Text, ParsedValue::Text(String::new()));
+        OptionalArgument::from(
+            "argument",
+            Some("a"),
+            Text,
+            ParsedValue::Text(String::new()),
+        );
     }
 
     #[test]
@@ -237,7 +254,8 @@ mod tests {
 
     #[test]
     fn optional_argument_get_short() {
-        let opt_arg = OptionalArgument::from("verbose", Some("v"), Boolean, ParsedValue::Boolean(false));
+        let opt_arg =
+            OptionalArgument::from("verbose", Some("v"), Boolean, ParsedValue::Boolean(false));
         assert_eq!(opt_arg.get_short_form(), Some("v".to_string()));
     }
 }
