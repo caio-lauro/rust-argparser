@@ -55,7 +55,7 @@ impl<'a> Argument<'a> {
 /// Don't use hyphens when specifying the long and short forms of the argument.
 pub struct OptionalArgument<'a> {
     long: &'a str,
-    short: &'a str,
+    short: Option<&'a str>,
     argtype: ArgumentType,
     default: ParsedValue,
 }
@@ -70,7 +70,7 @@ impl<'a> ArgumentTrait for OptionalArgument<'a> {
     }
 
     fn get_short_form(&self) -> Option<String> {
-        Some(self.short.to_string())
+        self.short.map(|s| s.to_string())
     }
 
     fn get_argtype(&self) -> ArgumentType {
