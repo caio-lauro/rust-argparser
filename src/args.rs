@@ -102,7 +102,7 @@ impl<'a> OptionalArgument<'a> {
 
         assert!(!long.is_empty(), "long type of argument must be used");
         assert!(!long.starts_with("-"), "long form must not start with '-', got: {long:?}");
-        
+
         if let Some(s) = short {
             assert!(!s.is_empty(), "If entered, short type of argument must not be empty");
             assert!(!s.starts_with("-"), "short form must not start with '-', got: {long:?}");
@@ -226,18 +226,18 @@ mod tests {
 
     #[test]
     fn optional_argument_valid() {
-        OptionalArgument::from("argument", "a", Text, ParsedValue::Text(String::new()));
+        OptionalArgument::from("argument", Some("a"), Text, ParsedValue::Text(String::new()));
     }
 
     #[test]
     #[should_panic]
     fn optional_argument_mismatched_default_panics() {
-        OptionalArgument::from("argument", "a", Boolean, ParsedValue::Integer(0));
+        OptionalArgument::from("argument", Some("a"), Boolean, ParsedValue::Integer(0));
     }
 
     #[test]
     fn optional_argument_get_short() {
-        let opt_arg = OptionalArgument::from("verbose", "v", Boolean, ParsedValue::Boolean(false));
+        let opt_arg = OptionalArgument::from("verbose", Some("v"), Boolean, ParsedValue::Boolean(false));
         assert_eq!(opt_arg.get_short_form(), Some("v".to_string()));
     }
 }
