@@ -50,7 +50,7 @@ impl<'a> Argument<'a> {
 }
 
 /// Type of argument to be used in case you want an optional argument. \
-/// The name of the argument will be considered as the long form of the argument.
+/// The *name* of the argument will be considered as the long form of the argument.
 ///
 /// Don't use hyphens when specifying the long and short forms of the argument.
 pub struct OptionalArgument<'a> {
