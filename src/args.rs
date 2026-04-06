@@ -40,7 +40,7 @@ impl<'a> ArgumentTrait for Argument<'a> {
 }
 
 impl<'a> Argument<'a> {
-    pub fn from(name: &'a str, argtype: ArgumentType) -> Argument<'a> {
+    pub fn new(name: &'a str, argtype: ArgumentType) -> Argument<'a> {
         assert!(
             !name.starts_with('-'),
             "required argument name must not start with '-', got: {name:?}"
@@ -93,7 +93,7 @@ impl<'a> OptionalArgument<'a> {
     /// Don't use hyphens when specifying the long and short forms of the argument. \
     /// Always use a long form, as it is considered the *name* of the argument. \
     /// The short form is optional.
-    pub fn from(
+    pub fn new(
         long: &'a str,
         short: Option<&'a str>,
         argtype: ArgumentType,
@@ -223,24 +223,24 @@ mod tests {
 
     #[test]
     fn argument_from_valid_name() {
-        Argument::from("argument", Text);
+        Argument::new("argument", Text);
     }
 
     #[test]
     #[should_panic]
     fn argument_from_name_with_dash_panics() {
-        Argument::from("--argument", Text);
+        Argument::new("--argument", Text);
     }
 
     #[test]
     #[should_panic]
     fn argument_from_name_with_single_dash_panics() {
-        Argument::from("-a", Text);
+        Argument::new("-a", Text);
     }
 
     #[test]
     fn optional_argument_valid() {
-        OptionalArgument::from(
+        OptionalArgument::new(
             "argument",
             Some("a"),
             Text,
@@ -250,7 +250,7 @@ mod tests {
 
     #[test]
     fn optional_argument_without_short_form() {
-        OptionalArgument::from(
+        OptionalArgument::new(
             "argument",
             None,
             Text,
@@ -261,13 +261,13 @@ mod tests {
     #[test]
     #[should_panic]
     fn optional_argument_mismatched_default_panics() {
-        OptionalArgument::from("argument", Some("a"), Boolean, ParsedValue::Integer(0));
+        OptionalArgument::new("argument", Some("a"), Boolean, ParsedValue::Integer(0));
     }
 
     #[test]
     #[should_panic]
     fn optional_argument_with_dash_on_long_form_panics() {
-        OptionalArgument::from(
+        OptionalArgument::new(
             "--argument",
             Some("a"),
             Text,
@@ -278,7 +278,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn optional_argument_with_empty_long_form_panics() {
-        OptionalArgument::from(
+        OptionalArgument::new(
             "",
             None,
             Text,
@@ -289,7 +289,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn optional_argument_with_dash_on_short_form_panics() {
-        OptionalArgument::from(
+        OptionalArgument::new(
             "argument",
             Some("-a"),
             Text,
@@ -300,7 +300,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn optional_argument_with_empty_short_form_panics() {
-        OptionalArgument::from(
+        OptionalArgument::new(
             "argument",
             Some(""),
             Text,
@@ -311,7 +311,7 @@ mod tests {
     #[test]
     fn optional_argument_get_short() {
         let opt_arg =
-            OptionalArgument::from("verbose", Some("v"), Boolean, ParsedValue::Boolean(false));
+            OptionalArgument::new("verbose", Some("v"), Boolean, ParsedValue::Boolean(false));
         assert_eq!(opt_arg.short_form(), Some("v".to_string()));
     }
 }

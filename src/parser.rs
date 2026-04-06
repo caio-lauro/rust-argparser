@@ -223,7 +223,7 @@ mod tests {
     #[test]
     fn parse_required_text() {
         let parsed = ArgumentParser::new()
-            .add_arg(Argument::from("filename", Text))
+            .add_arg(Argument::new("filename", Text))
             .parse(make_args(&["filename.txt"]))
             .unwrap();
         assert_eq!(parsed.get_as::<String>("filename"), "filename.txt");
@@ -232,7 +232,7 @@ mod tests {
     #[test]
     fn parse_required_integer() {
         let parsed = ArgumentParser::new()
-            .add_arg(Argument::from("port", Integer))
+            .add_arg(Argument::new("port", Integer))
             .parse(make_args(&["8080"]))
             .unwrap();
         assert_eq!(parsed.get_as::<i64>("port"), 8080);
@@ -241,7 +241,7 @@ mod tests {
     #[test]
     fn parse_optional_long_form() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "port",
                 Some("p"),
                 Integer,
@@ -255,7 +255,7 @@ mod tests {
     #[test]
     fn parse_optional_short_form() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "port",
                 Some("p"),
                 Integer,
@@ -269,7 +269,7 @@ mod tests {
     #[test]
     fn parse_optional_bool_long_form() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "verbose",
                 Some("v"),
                 Boolean,
@@ -283,7 +283,7 @@ mod tests {
     #[test]
     fn parse_optional_bool_short_form() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "verbose",
                 Some("v"),
                 Boolean,
@@ -297,7 +297,7 @@ mod tests {
     #[test]
     fn parse_optional_uses_default_value() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "verbose",
                 Some("v"),
                 Boolean,
@@ -311,7 +311,7 @@ mod tests {
     #[test]
     fn parse_optional_without_short_form() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "version",
                 None,
                 Boolean,
@@ -325,7 +325,7 @@ mod tests {
     #[test]
     fn parse_optional_without_short_form_uses_default_value() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "version",
                 None,
                 Boolean,
@@ -339,7 +339,7 @@ mod tests {
     #[test]
     fn parse_double_dash_stops_option_parsing() {
         let parsed = ArgumentParser::new()
-            .add_arg(Argument::from("filename", Text))
+            .add_arg(Argument::new("filename", Text))
             .parse(make_args(&["--", "--filename.txt"]))
             .unwrap();
         assert_eq!(parsed.get_as::<String>("filename"), "--filename.txt");
@@ -354,9 +354,9 @@ mod tests {
     #[test]
     fn parse_multiple_required_arguments() {
         let parsed = ArgumentParser::new()
-            .add_arg(Argument::from("input", Text))
-            .add_arg(Argument::from("output", Text))
-            .add_arg(Argument::from("count", Integer))
+            .add_arg(Argument::new("input", Text))
+            .add_arg(Argument::new("output", Text))
+            .add_arg(Argument::new("count", Integer))
             .parse(make_args(&["input.txt", "output.txt", "42"]))
             .unwrap();
         assert_eq!(parsed.get_as::<String>("input"), "input.txt");
@@ -367,19 +367,19 @@ mod tests {
     #[test]
     fn parse_multiple_optional_arguments() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "verbose",
                 Some("v"),
                 Boolean,
                 ParsedValue::Boolean(false),
             ))
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "port",
                 Some("p"),
                 Integer,
                 ParsedValue::Integer(8080),
             ))
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "version",
                 None,
                 Boolean,
@@ -395,14 +395,14 @@ mod tests {
     #[test]
     fn parse_multiple_optional_and_required_arguments() {
         let parsed = ArgumentParser::new()
-            .add_arg(Argument::from("input", Text))
-            .add_arg(OptionalArgument::from(
+            .add_arg(Argument::new("input", Text))
+            .add_arg(OptionalArgument::new(
                 "verbose",
                 Some("v"),
                 Boolean,
                 ParsedValue::Boolean(false),
             ))
-            .add_arg(Argument::from("output", Text))
+            .add_arg(Argument::new("output", Text))
             .parse(make_args(&["input.txt", "-v", "output.txt"]))
             .unwrap();
         assert_eq!(parsed.get_as::<String>("input"), "input.txt");
@@ -413,7 +413,7 @@ mod tests {
     #[test]
     fn parse_errors_missing_required() {
         let result = ArgumentParser::new()
-            .add_arg(Argument::from("filename", Text))
+            .add_arg(Argument::new("filename", Text))
             .parse(make_args(&[]));
         assert!(matches!(result, Err(ParseError::MissingRequired(_))));
     }
@@ -421,7 +421,7 @@ mod tests {
     #[test]
     fn parse_errors_missing_value() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "port",
                 Some("p"),
                 Integer,
@@ -434,7 +434,7 @@ mod tests {
     #[test]
     fn parse_errors_wrong_type() {
         let result = ArgumentParser::new()
-            .add_arg(Argument::from("count", Integer))
+            .add_arg(Argument::new("count", Integer))
             .parse(make_args(&["definitely_not_integer"]));
         assert!(matches!(result, Err(ParseError::WrongType { .. })));
     }
@@ -442,7 +442,7 @@ mod tests {
     #[test]
     fn parse_errors_unknown_argument() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "port",
                 Some("p"),
                 Integer,
@@ -455,7 +455,7 @@ mod tests {
     #[test]
     fn parse_errors_duplicate_argument_short_then_long() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "verbose",
                 Some("v"),
                 Boolean,
@@ -468,7 +468,7 @@ mod tests {
     #[test]
     fn parse_errors_duplicate_argument_long_then_short() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from(
+            .add_arg(OptionalArgument::new(
                 "verbose",
                 Some("v"),
                 Boolean,
@@ -481,7 +481,7 @@ mod tests {
     #[test]
     fn parse_errors_too_many_arguments() {
         let result = ArgumentParser::new()
-            .add_arg(Argument::from("filename", Text))
+            .add_arg(Argument::new("filename", Text))
             .parse(make_args(&["filename.txt", "extra_argument"]));
         println!("{result:?}");
         assert!(matches!(result, Err(ParseError::TooManyArguments)));
@@ -497,7 +497,7 @@ mod tests {
     #[should_panic]
     fn panics_on_get_unknown_argument() {
         let parsed = ArgumentParser::new()
-            .add_arg(Argument::from("input", Text))
+            .add_arg(Argument::new("input", Text))
             .parse(make_args(&["input.txt"]))
             .unwrap();
         parsed.get("output");
@@ -506,6 +506,6 @@ mod tests {
     #[test]
     #[should_panic]
     fn panics_on_required_boolean() {
-        ArgumentParser::new().add_arg(Argument::from("verbose", Boolean));
+        ArgumentParser::new().add_arg(Argument::new("verbose", Boolean));
     }
 }

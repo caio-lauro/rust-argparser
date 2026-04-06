@@ -5,16 +5,16 @@ use argparser::{
 #[test]
 fn full_usage() -> Result<(), Box<dyn std::error::Error>> {
     let parser = ArgumentParser::new()
-        .add_arg(Argument::from("input", Text))
-        .add_arg(Argument::from("output", Text))
-        .add_arg(OptionalArgument::from(
+        .add_arg(Argument::new("input", Text))
+        .add_arg(Argument::new("output", Text))
+        .add_arg(OptionalArgument::new(
             "verbose",
             None,
             Boolean,
             ParsedValue::Boolean(false),
         ))
-        .add_arg(Argument::from("port", Integer))
-        .add_arg(OptionalArgument::from(
+        .add_arg(Argument::new("port", Integer))
+        .add_arg(OptionalArgument::new(
             "count",
             Some("c"),
             Integer,

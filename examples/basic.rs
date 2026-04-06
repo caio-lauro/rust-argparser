@@ -2,15 +2,15 @@ use argparser::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, Par
 
 fn main() {
     let parser = ArgumentParser::new()
-        .add_arg(Argument::from("input", Text))
-        .add_arg(Argument::from("output", Text))
-        .add_arg(OptionalArgument::from(
+        .add_arg(Argument::new("input", Text))
+        .add_arg(Argument::new("output", Text))
+        .add_arg(OptionalArgument::new(
             "verbose",
             Some("v"),
             Boolean,
             ParsedValue::Boolean(false),
         ))
-        .add_arg(OptionalArgument::from(
+        .add_arg(OptionalArgument::new(
             "count",
             Some("c"),
             Integer,
