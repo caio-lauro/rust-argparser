@@ -2,7 +2,11 @@ use std::{collections::HashMap, fmt::Display};
 
 use crate::macro_types::{ArgumentType, FromParsedValue, ParsedValue};
 
-pub trait ArgumentTrait {
+mod private {
+    pub trait Sealed {}
+}
+
+pub trait ArgumentTrait: private::Sealed {
     fn is_required(&self) -> bool;
     fn name(&self) -> String;
     fn short_form(&self) -> Option<String>;
@@ -16,6 +20,8 @@ pub struct Argument<'a> {
     name: &'a str,
     argtype: ArgumentType,
 }
+
+impl private::Sealed for Argument<'_> {}
 
 impl<'a> ArgumentTrait for Argument<'a> {
     fn is_required(&self) -> bool {
@@ -62,6 +68,8 @@ pub struct OptionalArgument<'a> {
     argtype: ArgumentType,
     default: ParsedValue,
 }
+
+impl private::Sealed for OptionalArgument<'_> {}
 
 impl<'a> ArgumentTrait for OptionalArgument<'a> {
     fn is_required(&self) -> bool {
