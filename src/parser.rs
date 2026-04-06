@@ -204,6 +204,12 @@ impl ArgumentParser {
     }
 }
 
+impl Default for ArgumentParser {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -305,7 +311,12 @@ mod tests {
     #[test]
     fn parse_optional_without_short_form() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from("version", None, Boolean, ParsedValue::Boolean(false)))
+            .add_arg(OptionalArgument::from(
+                "version",
+                None,
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
             .parse(make_args(&["--version"]))
             .unwrap();
         assert_eq!(parsed.get_as::<bool>("version"), true);
@@ -314,7 +325,12 @@ mod tests {
     #[test]
     fn parse_optional_without_short_form_uses_default_value() {
         let parsed = ArgumentParser::new()
-            .add_arg(OptionalArgument::from("version", None, Boolean, ParsedValue::Boolean(false)))
+            .add_arg(OptionalArgument::from(
+                "version",
+                None,
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
             .parse(make_args(&[]))
             .unwrap();
         assert_eq!(parsed.get_as::<bool>("version"), false);
@@ -331,8 +347,7 @@ mod tests {
 
     #[test]
     fn parse_double_dash_with_nothing_after() {
-        let result = ArgumentParser::new()
-            .parse(make_args(&["--"]));
+        let result = ArgumentParser::new().parse(make_args(&["--"]));
         assert!(result.is_ok());
     }
 
@@ -406,7 +421,12 @@ mod tests {
     #[test]
     fn parse_errors_missing_value() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from("port", Some("p"), Integer, ParsedValue::Integer(8080)))
+            .add_arg(OptionalArgument::from(
+                "port",
+                Some("p"),
+                Integer,
+                ParsedValue::Integer(8080),
+            ))
             .parse(make_args(&["-p"]));
         assert!(matches!(result, Err(ParseError::MissingValue(_))));
     }
@@ -422,7 +442,12 @@ mod tests {
     #[test]
     fn parse_errors_unknown_argument() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from("port", Some("p"), Integer, ParsedValue::Integer(8080)))
+            .add_arg(OptionalArgument::from(
+                "port",
+                Some("p"),
+                Integer,
+                ParsedValue::Integer(8080),
+            ))
             .parse(make_args(&["-c", "42"]));
         assert!(matches!(result, Err(ParseError::UnknownArgument(_))));
     }
@@ -430,7 +455,12 @@ mod tests {
     #[test]
     fn parse_errors_duplicate_argument_short_then_long() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from("verbose", Some("v"), Boolean, ParsedValue::Boolean(false)))
+            .add_arg(OptionalArgument::from(
+                "verbose",
+                Some("v"),
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
             .parse(make_args(&["-v", "--verbose"]));
         assert!(matches!(result, Err(ParseError::DuplicateArgument(_))));
     }
@@ -438,7 +468,12 @@ mod tests {
     #[test]
     fn parse_errors_duplicate_argument_long_then_short() {
         let result = ArgumentParser::new()
-            .add_arg(OptionalArgument::from("verbose", Some("v"), Boolean, ParsedValue::Boolean(false)))
+            .add_arg(OptionalArgument::from(
+                "verbose",
+                Some("v"),
+                Boolean,
+                ParsedValue::Boolean(false),
+            ))
             .parse(make_args(&["--verbose", "-v"]));
         assert!(matches!(result, Err(ParseError::DuplicateArgument(_))));
     }
@@ -454,8 +489,7 @@ mod tests {
 
     #[test]
     fn parse_errors_positional_with_no_required_args() {
-        let result = ArgumentParser::new()
-            .parse(make_args(&["unexpected_argument"]));
+        let result = ArgumentParser::new().parse(make_args(&["unexpected_argument"]));
         assert!(matches!(result, Err(ParseError::TooManyArguments)));
     }
 
