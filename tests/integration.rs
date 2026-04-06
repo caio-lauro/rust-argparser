@@ -36,12 +36,12 @@ fn full_usage() -> Result<(), Box<dyn std::error::Error>> {
         &ParsedValue::Text("input.txt".to_string())
     );
     assert_eq!(
-        parsed.get_value::<String>("output"),
+        parsed.get_as::<String>("output"),
         String::from("output.txt")
     );
-    assert_eq!(parsed.get_value::<i64>("port"), 8080);
-    assert_eq!(parsed.get_value::<bool>("verbose"), true);
-    assert_eq!(parsed.get_value::<i64>("count"), 42);
+    assert_eq!(parsed.get_as::<i64>("port"), 8080);
+    assert_eq!(parsed.get_as::<bool>("verbose"), true);
+    assert_eq!(parsed.get_as::<i64>("count"), 42);
 
     Ok(())
 }

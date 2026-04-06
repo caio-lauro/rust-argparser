@@ -4,10 +4,10 @@ use crate::macro_types::{ArgumentType, FromParsedValue, ParsedValue};
 
 pub trait ArgumentTrait {
     fn is_required(&self) -> bool;
-    fn get_name(&self) -> String;
-    fn get_short_form(&self) -> Option<String>;
-    fn get_argtype(&self) -> ArgumentType;
-    fn get_default_value(&self) -> Option<ParsedValue>;
+    fn name(&self) -> String;
+    fn short_form(&self) -> Option<String>;
+    fn argtype(&self) -> ArgumentType;
+    fn default_value(&self) -> Option<ParsedValue>;
 }
 
 /// Type of argument to be used in case you want a required argument.
@@ -22,19 +22,19 @@ impl<'a> ArgumentTrait for Argument<'a> {
         true
     }
 
-    fn get_name(&self) -> String {
+    fn name(&self) -> String {
         self.name.to_string()
     }
 
-    fn get_short_form(&self) -> Option<String> {
+    fn short_form(&self) -> Option<String> {
         None
     }
 
-    fn get_argtype(&self) -> ArgumentType {
+    fn argtype(&self) -> ArgumentType {
         self.argtype
     }
 
-    fn get_default_value(&self) -> Option<ParsedValue> {
+    fn default_value(&self) -> Option<ParsedValue> {
         None
     }
 }
@@ -67,19 +67,19 @@ impl<'a> ArgumentTrait for OptionalArgument<'a> {
         false
     }
 
-    fn get_name(&self) -> String {
+    fn name(&self) -> String {
         self.long.to_string()
     }
 
-    fn get_short_form(&self) -> Option<String> {
+    fn short_form(&self) -> Option<String> {
         self.short.map(|s| s.to_string())
     }
 
-    fn get_argtype(&self) -> ArgumentType {
+    fn argtype(&self) -> ArgumentType {
         self.argtype
     }
 
-    fn get_default_value(&self) -> Option<ParsedValue> {
+    fn default_value(&self) -> Option<ParsedValue> {
         Some(self.default.clone())
     }
 }
@@ -162,7 +162,7 @@ impl ParsedArgs {
     /// to use pattern matching. \
     /// Using the internal method `get`, panics in case the argument doesn't
     /// exist.
-    pub fn get_value<T: FromParsedValue>(&self, name: &str) -> T {
+    pub fn get_as<T: FromParsedValue>(&self, name: &str) -> T {
         T::from_parsed(self.get(name), name)
     }
 }
@@ -311,6 +311,6 @@ mod tests {
     fn optional_argument_get_short() {
         let opt_arg =
             OptionalArgument::from("verbose", Some("v"), Boolean, ParsedValue::Boolean(false));
-        assert_eq!(opt_arg.get_short_form(), Some("v".to_string()));
+        assert_eq!(opt_arg.short_form(), Some("v".to_string()));
     }
 }

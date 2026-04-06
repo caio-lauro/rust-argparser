@@ -31,16 +31,16 @@ impl ArgumentParser {
     /// Adds an argument of either type: `Argument` or `OptionalArgument`
     pub fn add_arg(mut self, arg: impl ArgumentTrait + 'static) -> Self {
         if arg.is_required() {
-            if arg.get_argtype() == Boolean {
+            if arg.argtype() == Boolean {
                 panic!("Required argument must not be of type boolean.");
             }
             self.required_args.push(Box::new(arg));
         } else {
             let idx = self.optional_args.len();
-            if let Some(short) = arg.get_short_form() {
+            if let Some(short) = arg.short_form() {
                 self.short_map.insert(short, idx);
             }
-            self.long_map.insert(arg.get_name(), idx);
+            self.long_map.insert(arg.name(), idx);
 
             self.optional_args.push(OptionalEntry {
                 arg: Box::new(arg),
@@ -83,7 +83,7 @@ impl ArgumentParser {
                     }
 
                     let opt_arg = &self.optional_args[long_arg_idx].arg;
-                    let tp = opt_arg.get_argtype();
+                    let tp = opt_arg.argtype();
                     if tp == Boolean {
                         parsed.insert(name, ParsedValue::Boolean(true));
                         self.optional_args[long_arg_idx].seen = true;
@@ -121,14 +121,14 @@ impl ArgumentParser {
                 let name = arg[1..].to_string();
                 if let Some(&short_arg_idx) = self.short_map.get(&name) {
                     let opt_arg = &self.optional_args[short_arg_idx].arg;
-                    let name = opt_arg.get_name();
+                    let name = opt_arg.name();
                     if self.optional_args[short_arg_idx].seen {
                         return Err(ParseError::DuplicateArgument(name));
                     }
 
-                    let tp = opt_arg.get_argtype();
+                    let tp = opt_arg.argtype();
                     if tp == Boolean {
-                        parsed.insert(opt_arg.get_name(), ParsedValue::Boolean(true));
+                        parsed.insert(opt_arg.name(), ParsedValue::Boolean(true));
                         self.optional_args[short_arg_idx].seen = true;
                         continue;
                     }
@@ -161,13 +161,13 @@ impl ArgumentParser {
                     return Err(ParseError::UnknownArgument(name));
                 }
             } else if let Some(argument) = current_required.next() {
-                let value = match argument.get_argtype() {
+                let value = match argument.argtype() {
                     Text => ParsedValue::Text(arg),
                     Integer => ParsedValue::Integer(match arg.parse() {
                         Ok(v) => v,
                         Err(_) => {
                             return Err(ParseError::WrongType {
-                                name: argument.get_name(),
+                                name: argument.name(),
                                 expected: Integer,
                                 given: arg,
                             });
@@ -176,25 +176,25 @@ impl ArgumentParser {
                     Boolean => ParsedValue::Boolean(true),
                 };
 
-                parsed.insert(argument.get_name(), value);
+                parsed.insert(argument.name(), value);
             } else {
                 return Err(ParseError::TooManyArguments);
             }
         }
 
         if let Some(argument) = current_required.next() {
-            return Err(ParseError::MissingRequired(argument.get_name()));
+            return Err(ParseError::MissingRequired(argument.name()));
         }
 
         for entry in &self.optional_args {
             if !entry.seen {
                 let arg = &entry.arg;
-                if let Some(default) = arg.get_default_value() {
-                    parsed.insert(arg.get_name(), default);
+                if let Some(default) = arg.default_value() {
+                    parsed.insert(arg.name(), default);
                 } else {
                     unreachable!(
                         "All optional arguments require an optional value {} doesn't have one.",
-                        arg.get_name()
+                        arg.name()
                     );
                 }
             }
@@ -220,7 +220,7 @@ mod tests {
             .add_arg(Argument::from("filename", Text))
             .parse(make_args(&["filename.txt"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<String>("filename"), "filename.txt");
+        assert_eq!(parsed.get_as::<String>("filename"), "filename.txt");
     }
 
     #[test]
@@ -229,7 +229,7 @@ mod tests {
             .add_arg(Argument::from("port", Integer))
             .parse(make_args(&["8080"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<i64>("port"), 8080);
+        assert_eq!(parsed.get_as::<i64>("port"), 8080);
     }
 
     #[test]
@@ -243,7 +243,7 @@ mod tests {
             ))
             .parse(make_args(&["--port", "42"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<i64>("port"), 42);
+        assert_eq!(parsed.get_as::<i64>("port"), 42);
     }
 
     #[test]
@@ -257,7 +257,7 @@ mod tests {
             ))
             .parse(make_args(&["-p", "42"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<i64>("port"), 42);
+        assert_eq!(parsed.get_as::<i64>("port"), 42);
     }
 
     #[test]
@@ -271,7 +271,7 @@ mod tests {
             ))
             .parse(make_args(&["--verbose"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<bool>("verbose"), true);
+        assert_eq!(parsed.get_as::<bool>("verbose"), true);
     }
 
     #[test]
@@ -285,7 +285,7 @@ mod tests {
             ))
             .parse(make_args(&["-v"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<bool>("verbose"), true);
+        assert_eq!(parsed.get_as::<bool>("verbose"), true);
     }
 
     #[test]
@@ -299,7 +299,7 @@ mod tests {
             ))
             .parse(make_args(&[]))
             .unwrap();
-        assert_eq!(parsed.get_value::<bool>("verbose"), false);
+        assert_eq!(parsed.get_as::<bool>("verbose"), false);
     }
 
     #[test]
@@ -308,7 +308,7 @@ mod tests {
             .add_arg(OptionalArgument::from("version", None, Boolean, ParsedValue::Boolean(false)))
             .parse(make_args(&["--version"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<bool>("version"), true);
+        assert_eq!(parsed.get_as::<bool>("version"), true);
     }
 
     #[test]
@@ -317,7 +317,7 @@ mod tests {
             .add_arg(OptionalArgument::from("version", None, Boolean, ParsedValue::Boolean(false)))
             .parse(make_args(&[]))
             .unwrap();
-        assert_eq!(parsed.get_value::<bool>("version"), false);
+        assert_eq!(parsed.get_as::<bool>("version"), false);
     }
 
     #[test]
@@ -326,7 +326,7 @@ mod tests {
             .add_arg(Argument::from("filename", Text))
             .parse(make_args(&["--", "--filename.txt"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<String>("filename"), "--filename.txt");
+        assert_eq!(parsed.get_as::<String>("filename"), "--filename.txt");
     }
 
     #[test]
@@ -344,9 +344,9 @@ mod tests {
             .add_arg(Argument::from("count", Integer))
             .parse(make_args(&["input.txt", "output.txt", "42"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<String>("input"), "input.txt");
-        assert_eq!(parsed.get_value::<String>("output"), "output.txt");
-        assert_eq!(parsed.get_value::<i64>("count"), 42);
+        assert_eq!(parsed.get_as::<String>("input"), "input.txt");
+        assert_eq!(parsed.get_as::<String>("output"), "output.txt");
+        assert_eq!(parsed.get_as::<i64>("count"), 42);
     }
 
     #[test]
@@ -372,9 +372,9 @@ mod tests {
             ))
             .parse(make_args(&["-p", "42", "-v"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<bool>("verbose"), true);
-        assert_eq!(parsed.get_value::<i64>("port"), 42);
-        assert_eq!(parsed.get_value::<bool>("version"), false);
+        assert_eq!(parsed.get_as::<bool>("verbose"), true);
+        assert_eq!(parsed.get_as::<i64>("port"), 42);
+        assert_eq!(parsed.get_as::<bool>("version"), false);
     }
 
     #[test]
@@ -390,9 +390,9 @@ mod tests {
             .add_arg(Argument::from("output", Text))
             .parse(make_args(&["input.txt", "-v", "output.txt"]))
             .unwrap();
-        assert_eq!(parsed.get_value::<String>("input"), "input.txt");
-        assert_eq!(parsed.get_value::<bool>("verbose"), true);
-        assert_eq!(parsed.get_value::<String>("output"), "output.txt");
+        assert_eq!(parsed.get_as::<String>("input"), "input.txt");
+        assert_eq!(parsed.get_as::<bool>("verbose"), true);
+        assert_eq!(parsed.get_as::<String>("output"), "output.txt");
     }
 
     #[test]
