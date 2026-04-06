@@ -6,6 +6,7 @@ mod private {
     pub trait Sealed {}
 }
 
+#[doc(hidden)]
 pub trait ArgumentTrait: private::Sealed {
     fn is_required(&self) -> bool;
     fn name(&self) -> String;
