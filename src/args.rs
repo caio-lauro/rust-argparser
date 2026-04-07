@@ -47,6 +47,11 @@ impl<'a> ArgumentTrait for Argument<'a> {
 }
 
 impl<'a> Argument<'a> {
+    /// Creates a new required `Argument`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `name` starts with `'-'`.
     pub fn new(name: &'a str, argtype: ArgumentType) -> Argument<'a> {
         assert!(
             !name.starts_with('-'),
@@ -95,13 +100,14 @@ impl<'a> ArgumentTrait for OptionalArgument<'a> {
 }
 
 impl<'a> OptionalArgument<'a> {
-    /// Creates an `OptionalArgument` from `long` and `short` forms as `&str`,
-    /// an `ArgumentType` and a `default` value. \
-    /// Use the same type for both `argtype` and `default`.
+    /// Creates a new `OptionalArgument`.
     ///
-    /// Don't use hyphens when specifying the long and short forms of the argument. \
-    /// Always use a long form, as it is considered the *name* of the argument. \
-    /// The short form is optional.
+    /// # Panics
+    ///
+    /// Panics if:
+    /// - `long` is empty or starts with `'-'`
+    /// - `short` is `Some("")` or starts with `'-'`
+    /// - `default` type does not match with `argtype`
     pub fn new(
         long: &'a str,
         short: Option<&'a str>,
@@ -160,18 +166,23 @@ impl ParsedArgs {
         self.values.insert(name, value);
     }
 
-    /// Gets the value of a given argument by `name` as a reference to ParsedValue. \
-    /// Panics in case the argument doesn't exist.
+    /// Gets the value of a given argument by `name` as a reference to [`ParsedValue`]. \
+    ///
+    /// # Panics
+    ///
+    /// Panics if `name` was not registered as a long form of an argument.
     pub fn get(&self, name: &str) -> &ParsedValue {
         self.values
             .get(name)
             .unwrap_or_else(|| panic!("Argument {name} not found"))
     }
 
-    /// Gets the value of a given argument by `name` directly, in case you don't want
-    /// to use pattern matching. \
-    /// Using the internal method `get`, panics in case the argument doesn't
-    /// exist.
+    /// Gets the value of a given argument by `name` directly converted to type `T`. \
+    /// Uses `get` internally.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `name` was not registered as a long form of an argument.
     pub fn get_as<T: FromParsedValue>(&self, name: &str) -> T {
         T::from_parsed(self.get(name), name)
     }
