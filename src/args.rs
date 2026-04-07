@@ -49,6 +49,14 @@ impl<'a> ArgumentTrait for Argument<'a> {
 impl<'a> Argument<'a> {
     /// Creates a new required `Argument`.
     ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use argparser::{Argument, ArgumentType::*};
+    ///
+    /// let arg = Argument::new("input", Text);
+    /// ```
+    ///
     /// # Panics
     ///
     /// Panics if `name` starts with `'-'`.
@@ -101,6 +109,13 @@ impl<'a> ArgumentTrait for OptionalArgument<'a> {
 
 impl<'a> OptionalArgument<'a> {
     /// Creates a new `OptionalArgument`.
+    ///
+    /// # Example
+    /// ```rust
+    /// use argparser::{OptionalArgument, ArgumentType::*, ParsedValue};
+    ///
+    /// let arg = OptionalArgument::new("count", Some("c"), Integer, ParsedValue::Integer(42));
+    /// ```
     ///
     /// # Panics
     ///
