@@ -1,4 +1,4 @@
-use argparser::{
+use argtiny::{
     Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParseError, ParsedValue,
 };
 

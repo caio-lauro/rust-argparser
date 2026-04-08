@@ -7,7 +7,7 @@
 //! # Example
 //!
 //! ```rust
-//! use argparser::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
+//! use argtiny::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
 //!
 //! let parser = ArgumentParser::new()
 //!     .add_arg(Argument::new("input", Text))
@@ -40,7 +40,7 @@
 //! assert_eq!(parsed.get_as::<String>("output"), "output.txt");
 //! assert_eq!(parsed.get_as::<bool>("verbose"), false);
 //! assert_eq!(parsed.get_as::<i64>("count"), 42);
-//! # Ok::<(), argparser::ParseError>(())
+//! # Ok::<(), argtiny::ParseError>(())
 //! ```
 
 mod args;

@@ -1,4 +1,4 @@
-# argparser
+# argtiny
 
 A simple, lightweight argument parser library for Rust.
 
@@ -15,12 +15,12 @@ A simple, lightweight argument parser library for Rust.
 Add to your `Cargo.toml`:
 ```toml
 [dependencies]
-argparser = "0.1.0"
+argtiny = "0.1.0"
 ```
 
 ## Example
 ```rust
-use argparser::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
+use argtiny::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
 
 fn main() {
     let parser = ArgumentParser::new()

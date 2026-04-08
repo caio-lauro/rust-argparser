@@ -1,11 +1,11 @@
 [package]
-name = "argparser"
+name = "argtiny"
 version = "0.1.0"
 authors = ["Caio Lauro de Lima"]
 edition = "2024"
 description = "A simple argument parser library"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/caio-lauro/rust-argparser"
+repository = "https://github.com/caio-lauro/rust-argtiny"
 readme = "README.md"
 keywords = ["cli", "args", "argument", "parser"]
 categories = ["command-line-interface"]

@@ -52,7 +52,7 @@ impl<'a> Argument<'a> {
     /// # Example
     ///
     /// ```rust
-    /// use argparser::{Argument, ArgumentType::*};
+    /// use argtiny::{Argument, ArgumentType::*};
     ///
     /// let arg = Argument::new("input", Text);
     /// ```
@@ -111,7 +111,7 @@ impl<'a> OptionalArgument<'a> {
     ///
     /// # Example
     /// ```rust
-    /// use argparser::{OptionalArgument, ArgumentType::*, ParsedValue};
+    /// use argtiny::{OptionalArgument, ArgumentType::*, ParsedValue};
     ///
     /// let arg = OptionalArgument::new("count", Some("c"), Integer, ParsedValue::Integer(42));
     /// ```
@@ -185,14 +185,14 @@ impl ParsedArgs {
     /// # Example
     ///
     /// ```rust
-    /// use argparser::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
+    /// use argtiny::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
     ///
     /// let parsed = ArgumentParser::new()
     ///     .add_arg(Argument::new("input", Text))
     ///     .parse(["program", "input.txt"].map(String::from))?;
     ///
     /// assert_eq!(parsed.get("input"), &ParsedValue::Text("input.txt".to_string()));
-    /// # Ok::<(), argparser::ParseError>(())
+    /// # Ok::<(), argtiny::ParseError>(())
     /// ```
     ///
     /// # Panics
@@ -210,14 +210,14 @@ impl ParsedArgs {
     /// # Example
     ///
     /// ```rust
-    /// use argparser::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
+    /// use argtiny::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
     ///
     /// let parsed = ArgumentParser::new()
     ///     .add_arg(Argument::new("input", Text))
     ///     .parse(["program", "input.txt"].map(String::from))?;
     ///
     /// assert_eq!(parsed.get_as::<String>("input"), "input.txt".to_string());
-    /// # Ok::<(), argparser::ParseError>(())
+    /// # Ok::<(), argtiny::ParseError>(())
     /// ```
     ///
     /// # Panics

@@ -1,4 +1,4 @@
-use argparser::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
+use argtiny::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
 
 fn main() {
     let parser = ArgumentParser::new()

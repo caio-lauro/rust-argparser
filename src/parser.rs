@@ -73,7 +73,7 @@ impl ArgumentParser {
     /// # Example
     ///
     /// ```rust
-    /// use argparser::ArgumentParser;
+    /// use argtiny::ArgumentParser;
     ///
     /// let parser = ArgumentParser::new();
     /// ```
@@ -92,7 +92,7 @@ impl ArgumentParser {
     /// # Example
     ///
     /// ```rust
-    /// use argparser::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
+    /// use argtiny::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
     ///
     /// let parser = ArgumentParser::new()
     ///     .add_arg(Argument::new("input", Text))
@@ -138,13 +138,13 @@ impl ArgumentParser {
     /// # Example
     ///
     /// ```rust,should_panic
-    /// use argparser::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
+    /// use argtiny::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
     ///
     /// let parsed = ArgumentParser::new()
     ///     .add_arg(Argument::new("input", Text))
     ///     .parse(std::env::args())?;
     ///
-    /// # Ok::<(), argparser::ParseError>(())
+    /// # Ok::<(), argtiny::ParseError>(())
     /// ```
     ///
     /// # Errors
