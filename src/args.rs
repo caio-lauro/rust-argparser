@@ -181,7 +181,20 @@ impl ParsedArgs {
         self.values.insert(name, value);
     }
 
-    /// Gets the value of a given argument by `name` as a reference to [`ParsedValue`]. \
+    /// Gets the value of a given argument by `name` as a reference to [`ParsedValue`].
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use argparser::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
+    ///
+    /// let parsed = ArgumentParser::new()
+    ///     .add_arg(Argument::new("input", Text))
+    ///     .parse(["program", "input.txt"].map(String::from))?;
+    ///
+    /// assert_eq!(parsed.get("input"), &ParsedValue::Text("input.txt".to_string()));
+    /// # Ok::<(), argparser::ParseError>(())
+    /// ```
     ///
     /// # Panics
     ///
@@ -194,6 +207,19 @@ impl ParsedArgs {
 
     /// Gets the value of a given argument by `name` directly converted to type `T`. \
     /// Uses `get` internally.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use argparser::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
+    ///
+    /// let parsed = ArgumentParser::new()
+    ///     .add_arg(Argument::new("input", Text))
+    ///     .parse(["program", "input.txt"].map(String::from))?;
+    ///
+    /// assert_eq!(parsed.get_as::<String>("input"), "input.txt".to_string());
+    /// # Ok::<(), argparser::ParseError>(())
+    /// ```
     ///
     /// # Panics
     ///
