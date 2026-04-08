@@ -3,13 +3,15 @@ macro_rules! define_arg_types {
         /// Enum used to store the type of the argument.
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
         pub enum ArgumentType {
-            $($variant),*
+            $(#[doc=concat!("Specifies the type of an argument as `", stringify!($variant), "`.")]
+            $variant),*
         }
 
-        /// Enum used to store both the type and the value of the argument.
+        /// Enum used to store the value of the argument. Should always match with [`ArgumentType`].
         #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
         pub enum ParsedValue {
-            $($variant($type)),*
+            $(#[doc=concat!("Stores the value of an argument as `", stringify!($type), "`.")]
+            $variant($type)),*
         }
 
         impl ParsedValue {
