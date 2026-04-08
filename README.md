@@ -15,7 +15,7 @@ A simple, lightweight argument parser library for Rust.
 Add to your `Cargo.toml`:
 ```toml
 [dependencies]
-argtiny = "0.1.0"
+argtiny = "0.1.1"
 ```
 
 ## Example
