@@ -97,9 +97,9 @@ impl ArgumentParser {
     /// let parser = ArgumentParser::new()
     ///     .add_arg(Argument::new("input", Text))
     ///     .add_arg(OptionalArgument::new(
-    ///         "count", 
-    ///         Some("c"), 
-    ///         Integer, 
+    ///         "count",
+    ///         Some("c"),
+    ///         Integer,
     ///         ParsedValue::Integer(42)
     ///     ));
     /// ```
@@ -134,16 +134,16 @@ impl ArgumentParser {
     ///
     /// Parses *required* arguments in the order they were given. \
     /// For *optional* arguments, if they are not seen, their default value is used.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust
     /// use argparser::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
     ///
     /// let parsed = ArgumentParser::new()
     ///     .add_arg(Argument::new("input", Text))
     ///     .parse(["program", "input.txt"].map(String::from))?;
-    /// 
+    ///
     /// # Ok::<(), argparser::ParseError>(())
     /// ```
     ///
