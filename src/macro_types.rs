@@ -23,6 +23,7 @@ macro_rules! define_arg_types {
             }
         }
 
+        #[doc(hidden)]
         pub trait FromParsedValue: Sized {
             fn from_parsed(val: &ParsedValue, name: &str) -> Self;
         }

@@ -48,5 +48,7 @@ mod macro_types;
 mod parser;
 
 pub use args::{Argument, OptionalArgument, ParsedArgs};
-pub use macro_types::{ArgumentType, ArgumentType::*, FromParsedValue, ParsedValue};
+#[doc(hidden)]
+pub use macro_types::FromParsedValue;
+pub use macro_types::{ArgumentType, ArgumentType::*, ParsedValue};
 pub use parser::{ArgumentParser, ParseError};
