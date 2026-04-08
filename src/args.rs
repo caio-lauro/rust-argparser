@@ -73,8 +73,7 @@ impl<'a> Argument<'a> {
 /// The *name* of the argument will be considered as the long form of the argument.
 ///
 /// Don't use hyphens when specifying the long and short forms of the argument. \
-/// Always use a long form, as it is considered the *name* of the argument. \
-/// The short form is optional.
+/// The short form is optional, using `None` as its value. Otherwise, specify `Some(&str)`.
 #[derive(Debug, Clone)]
 pub struct OptionalArgument<'a> {
     long: &'a str,
