@@ -1,21 +1,11 @@
-use argtiny::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
+use argtiny::{ArgumentParser, arg};
 
 fn main() {
     let parser = ArgumentParser::new()
-        .add_arg(Argument::new("input", Text))
-        .add_arg(Argument::new("output", Text))
-        .add_arg(OptionalArgument::new(
-            "verbose",
-            Some("v"),
-            Boolean,
-            ParsedValue::Boolean(false),
-        ))
-        .add_arg(OptionalArgument::new(
-            "count",
-            Some("c"),
-            Integer,
-            ParsedValue::Integer(1),
-        ));
+        .add_arg(arg!(required: "input", Text))
+        .add_arg(arg!(required: "output", Text))
+        .add_arg(arg!(optional: "verbose", Boolean = false))
+        .add_arg(arg!(optional: "count", "c", Integer = 1));
 
     let parsed = parser.parse(std::env::args()).unwrap_or_else(|e| {
         eprintln!("error: {e}");
