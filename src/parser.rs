@@ -59,7 +59,7 @@ impl Display for ParseError {
 impl std::error::Error for ParseError {}
 
 /// Argument parser, to be used with std::env::args or other types that implement
-/// `IntoIterator` and have `String` as items.
+/// [`IntoIterator`] and have [`String`] as items.
 pub struct ArgumentParser {
     required_args: Vec<Box<dyn ArgumentTrait>>,
     optional_args: Vec<OptionalEntry>,
@@ -87,7 +87,7 @@ impl ArgumentParser {
         }
     }
 
-    /// Adds an `Argument` or `OptionalArgument` to the parser.
+    /// Adds an [`Argument`](crate::Argument) or [`OptionalArgument`](crate::OptionalArgument) to the parser.
     ///
     /// # Example
     ///
@@ -106,7 +106,7 @@ impl ArgumentParser {
     ///
     /// # Panics
     ///
-    /// Panics if a required argument (`Argument`) is of `Boolean` type.
+    /// Panics if a required argument is of [`Boolean`] type.
     pub fn add_arg(mut self, arg: impl ArgumentTrait + 'static) -> Self {
         if arg.is_required() {
             if arg.argtype() == Boolean {
@@ -130,7 +130,7 @@ impl ArgumentParser {
     }
 
     /// Parses any and all arguments given **after** the first one. \
-    /// `args` must implement `IntoIterator` trait and each item must be of type `String`.
+    /// `args` must implement [`IntoIterator`] trait and each item must be of type [`String`].
     ///
     /// Parses *required* arguments in the order they were given. \
     /// For *optional* arguments, if they are not seen, their default value is used.
