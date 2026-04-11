@@ -7,17 +7,12 @@
 //! # Example
 //!
 //! ```rust
-//! use argtiny::{Argument, ArgumentParser, ArgumentType::*, OptionalArgument, ParsedValue};
+//! use argtiny::{Argument, ArgumentParser, ArgumentType::*, arg, OptionalArgument, ParsedValue};
 //!
 //! let parser = ArgumentParser::new()
-//!     .add_arg(Argument::new("input", Text))
+//!     .add_arg(arg!(required: "input", Text))
 //!     .add_arg(Argument::new("output", Text))
-//!     .add_arg(OptionalArgument::new(
-//!         "verbose",
-//!         Some("v"),
-//!         Boolean,
-//!         ParsedValue::Boolean(false),
-//!     ))
+//!     .add_arg(arg!(optional: "verbose", "v", Boolean = false))
 //!     .add_arg(OptionalArgument::new(
 //!         "count",
 //!         None,
@@ -45,6 +40,7 @@
 
 mod args;
 mod macro_types;
+mod macros;
 mod parser;
 
 pub use args::{Argument, OptionalArgument, ParsedArgs};
