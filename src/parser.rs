@@ -137,12 +137,12 @@ impl ArgumentParser {
     ///
     /// # Example
     ///
-    /// ```rust,should_panic
+    /// ```rust
     /// use argtiny::{Argument, ArgumentParser, ArgumentType::*, ParsedValue};
     ///
     /// let parsed = ArgumentParser::new()
     ///     .add_arg(Argument::new("input", Text))
-    ///     .parse(std::env::args())?;
+    ///     .parse(["program", "input.txt"].map(String::from))?;
     ///
     /// # Ok::<(), argtiny::ParseError>(())
     /// ```
