@@ -1,4 +1,4 @@
-/// Creates an [`Argument`] or [`OptionalArgument`] with a concise syntax.
+/// Creates an [`Argument`](crate::Argument) or [`OptionalArgument`](crate::OptionalArgument) with a concise syntax.
 /// 
 /// # Syntax
 /// 
