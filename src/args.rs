@@ -20,7 +20,7 @@ pub trait ArgumentTrait: private::Sealed {
 pub struct Argument<'a> {
     name: &'a str,
     argtype: ArgumentType,
-    pub(crate)description: Option<&'a str>,
+    pub(crate) description: Option<&'a str>,
 }
 
 impl private::Sealed for Argument<'_> {}
@@ -66,7 +66,11 @@ impl<'a> Argument<'a> {
             !name.starts_with('-'),
             "required argument name must not start with '-', got: {name:?}"
         );
-        Argument { name, argtype, description: None }
+        Argument {
+            name,
+            argtype,
+            description: None,
+        }
     }
 
     pub fn description(mut self, description: &'a str) -> Self {
@@ -86,7 +90,7 @@ pub struct OptionalArgument<'a> {
     short: Option<&'a str>,
     argtype: ArgumentType,
     default: ParsedValue,
-    pub(crate)description: Option<&'a str>,
+    pub(crate) description: Option<&'a str>,
 }
 
 impl private::Sealed for OptionalArgument<'_> {}
@@ -165,7 +169,7 @@ impl<'a> OptionalArgument<'a> {
             description: None,
         }
     }
-    
+
     pub fn description(mut self, description: &'a str) -> Self {
         self.description = Some(description);
         self
