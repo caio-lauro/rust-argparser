@@ -11,8 +11,4 @@ keywords = ["cli", "args", "argument", "parser"]
 categories = ["command-line-interface"]
 exclude = [".gitignore"]
 
-[[test]]
-name = "integration_test"
-path = "tests/integration.rs"
-
 [dependencies]
